@@ -1,35 +1,49 @@
-import './style.css';
-import { apiurl } from './src/constants';
+// import { apiurl } from './src/constants';
 
 document.title = 'prework';
 
 const characters = document.querySelector('section');
 
-async function getCharacters() {
-  const response = await fetch(apiurl, {
-    method: 'GET',
-  });
+const getCharacters = async () => {
+  const options = {
+  method: 'GET',
+  }
+};
+const API = "https://rickandmortyapi.com/api"
+try {
+  const response = await fetch (API);
 
-  var loading = false;
-
-  return await response.json();
+  const data = await response.json();
+  console.log(data)
+}
+catch (err) {
+  console.error("Something went wrong!", err);
 }
 
-(async () => {
-  var loading = true;
-  let { results, info } = await getCharacters();
+getCharacters()
 
-  document.querySelector('.search > input').value = 1;
-  document.querySelector('.search > span').innerText = info.pages;
+const search = document.querySelector('search')
 
-  document.querySelector('.search > input').addEventListener('change', () => {
-    fetch(apiurl + '?page=' + this.value)
+const input = document.querySelector('input')
+
+const span = document.querySelector('span')
+span.textContent = '42'
+
+const text = document.createTextNode('+ results[index].name');
+
+const allBtn = document.querySelector('#all')
+const aliveBtn = document.querySelector('#alive')
+const deadBtn = document.querySelector('#dead')
+
+
+characters.addEventListener('change', () => {
+    fetch(API + '?page=' + this.value)
       .then(function (res) {
-        return res.json();
+        return result.json();
       })
       .then((res) => {
         console.log(res);
-        results = res.results;
+        results = '';
       });
   });
 
@@ -57,38 +71,42 @@ async function getCharacters() {
     //todo render filtered results!
   }
 
-  function all2() {
+  function all() {
     // todo
   }
 
-  alive.addEventListener('click', getOnlyAlives);
-  dead.addEventListener('click', deadsOnly);
-  all.addEventListener('click', all2);
+  aliveBtn.addEventListener('click', getOnlyAlives);
+  deadBtn.addEventListener('click', deadsOnly);
+  allBtn.addEventListener('click', all);
 
-  // adding results to DOM!
-  for (let index in results) {
-    const p = document.createElement('p');
-    const lp = document.createElement('span');
+    characters.append(search);
+    const result = ''
 
-    lp.innerText = index + 1;
-    const text = document.createTextNode(' ' + results[index].name);
-    p.prepend(lp, text);
-
-    characters.append(p);
-
-    p.addEventListener('click', () => {
-      results[index];
       const n = document.createElement('div');
       const gender = document.createElement('div');
       const status = document.createElement('div');
       const jpg = document.createElement('img');
       jpg.width = '100';
+      
+      fetch("https://rickandmortyapi.com/api/character")
+      .then((data) => {
+        return data.json();
+      })
+                               
+      .then((objectData) => {
+          let listData = '';
+          objectData.map((values) => {
+            listData += `<main>
+            <section>${values.name}</section>
+            <section>${values.gender}</section>
+            <section>${values.status}</section>
+            <section>${values.image}</section>
+            </main>`;
+          });
+          document.getElementById('main').innerHTML = listData;
+      });
 
-      n.innerText = 'imie: ' + results[index].name;
-      gender.innerText = 'płeć: ' + results[index].gender;
-      status.innerText = 'status: ' + results[index].status;
-      jpg.src = results[index].image;
-
+            
       const details = document.querySelector('section:not(:first-child)');
 
       details.append(n, gender, status, jpg);
@@ -111,7 +129,5 @@ async function getCharacters() {
         });
 
         dialog.append(close);
-      };
-    });
-  }
-})();
+      };  
+    
